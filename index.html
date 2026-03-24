@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Main Courante SSIAP</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #121a2b;
+      --panel-2: #182235;
+      --line: #2a3750;
+      --text: #e5edf8;
+      --muted: #9fb0ca;
+      --accent: #22c55e;
+      --accent-2: #16a34a;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --shadow: 0 10px 30px rgba(0,0,0,0.25);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #ffffff;
+      color: #0b1220;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+    }
+
+    .sidebar {
+      background: #f1f5f9;
+      border-right: 1px solid #d1d5db;
+      padding: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .brand-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), #34d399);
+      color: #052e16;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status-card,
+    .mini-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    .status-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.25);
+      color: #86efac;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .pill.off {
+      background: rgba(239,68,68,0.12);
+      border-color: rgba(239,68,68,0.25);
+      color: #fca5a5;
+    }
+
+    .sidebar label,
+    .content label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .sidebar input,
+    .content input,
+    .content select,
+    .content textarea {
+      width: 100%;
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .content textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .sidebar input:focus,
+    .content input:focus,
+    .content select:focus,
+    .content textarea:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+
+    .btn,
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      transition: transform 0.12s ease, opacity 0.12s ease, background 0.2s ease;
+    }
+
+    .btn:hover,
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #03180c;
+      width: 100%;
+    }
+
+    .btn-secondary {
+      background: #1f2a40;
+      color: var(--text);
+      border: 1px solid var(--line);
+      width: 100%;
+    }
+
+    .btn-danger {
+      background: rgba(239,68,68,0.15);
+      color: #fecaca;
+      border: 1px solid rgba(239,68,68,0.25);
+      width: 100%;
+    }
+
+    .content {
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .topbar p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .card-header h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .toolbar input,
+    .toolbar select {
+      min-width: 180px;
+      flex: 1;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 70vh;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .entry {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .entry-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .entry-title {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .entry-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: #162136;
+    }
+
+    .tag.incident { color: #fca5a5; border-color: rgba(239,68,68,0.35); background: rgba(239,68,68,0.1); }
+    .tag.ronde { color: #93c5fd; border-color: rgba(59,130,246,0.35); background: rgba(59,130,246,0.1); }
+    .tag.ssi { color: #fcd34d; border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.1); }
+    .tag.consigne { color: #c4b5fd; border-color: rgba(139,92,246,0.35); background: rgba(139,92,246,0.1); }
+    .tag.technique { color: #86efac; border-color: rgba(34,197,94,0.35); background: rgba(34,197,94,0.1); }
+    .tag.permis-feu { color: #fdba74; border-color: rgba(249,115,22,0.35); background: rgba(249,115,22,0.1); }
+    .tag.clef { color: #67e8f9; border-color: rgba(6,182,212,0.35); background: rgba(6,182,212,0.1); }
+
+    .permit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .checklist {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 18px;
+      margin-top: 8px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #0f1727;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .check-item input {
+      width: auto;
+      margin: 0;
+      transform: scale(1.1);
+    }
+
+    .section-title {
+      margin: 8px 0 10px;
+      font-size: 14px;
+      color: #dbe7f8;
+      font-weight: 700;
+    }
+
+    .permit-card {
+      margin-top: 16px;
+    }
+
+    .key-card {
+      margin-top: 16px;
+    }
+
+    .key-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .key-item {
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #0f1727;
+    }
+
+    .key-item h4 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .key-item p {
+      margin: 6px 0;
+      color: #d8e3f3;
+      white-space: pre-wrap;
+    }
+
+    .key-status {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .status-box {
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: bold;
+      border: 1px solid var(--line);
+    }
+
+    .status-out { background: rgba(59,130,246,0.1); color:#1d4ed8; }
+    .status-in { background: rgba(34,197,94,0.1); color:#15803d; }
+    .status-late { background: rgba(239,68,68,0.12); color:#b91c1c; }
+
+    .late-alert {
+      border: 2px solid #dc2626 !important;
+      box-shadow: 0 0 0 3px rgba(220,38,38,0.12);
+      background: rgba(254, 242, 242, 0.95) !important;
+    }
+
+    .badge-signature {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(6,182,212,0.1);
+      border: 1px solid rgba(6,182,212,0.25);
+      color: #0f766e;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+
+    .active-keys-list {
+      display: grid;
+      gap: 10px;
+      margin: 14px 0 10px;
+    }
+
+    .active-key-row {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .active-key-row strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .permit-item {
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #0f1727;
+    }
+
+    .permit-item h4 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .permit-item p {
+      margin: 6px 0;
+      color: #d8e3f3;
+      white-space: pre-wrap;
+    }
+
+    .entry p {
+      margin: 10px 0 0;
+      color: #d8e3f3;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .entry small {
+      color: var(--muted);
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 20px;
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 8, 18, 0.86);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 460px;
+      background: #0c1322;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 26px;
+    }
+
+    .login-box h2 { margin-top: 0; }
+    .login-box p { color: var(--muted); }
+    .login-box .actions { display: grid; gap: 12px; margin-top: 18px; }
+
+    @media (max-width: 1100px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--line); }
+      .grid { grid-template-columns: 1fr; }
+      .permit-grid, .checklist, .key-grid { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: white; color: black; }
+      .sidebar, .topbar-actions, .toolbar, .footer-note, .no-print { display: none !important; }
+      .app, .content, .grid { display: block; padding: 0; }
+      .card { box-shadow: none; border: 1px solid #ccc; margin-bottom: 16px; }
+      .timeline { max-height: none; overflow: visible; }
+      .entry { background: white; color: black; border: 1px solid #ddd; break-inside: avoid; }
+      .entry p, .entry small, .topbar p { color: #333; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+      <div class="brand">
+        <div class="brand-badge">MC</div>
+        <div>
+          <h2>Main Courante SSIAP</h2>
+          <p>Connexion agent – version PC sécurité</p>
+        </div>
+      </div>
+
+      <label for="loginNom">Nom de l'agent</label>
+      <input id="loginNom" type="text" placeholder="Ex : Dupont" />
+
+      <div style="height:12px"></div>
+
+      <label for="loginRole">Fonction</label>
+      <select id="loginRole">
+        <option value="SSIAP 1">SSIAP 1</option>
+        <option value="SSIAP 2">SSIAP 2</option>
+      </select>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="login()">Se connecter</button>
+      </div>
+      <p class="footer-note">Connexion locale simple pour démonstration. Les données sont enregistrées sur cet appareil via localStorage.</p>
+    </div>
+  </div>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">MC</div>
+        <div>
+          <h1>PC Sécurité</h1>
+          <p>Main courante SSIAP 1 / SSIAP 2</p>
+        </div>
+      </div>
+
+      <div class="status-card">
+        <div id="sessionPill" class="pill off">● Déconnecté</div>
+        <div class="status-line"><span>Agent</span><strong id="agentName">—</strong></div>
+        <div class="status-line"><span>Fonction</span><strong id="agentRole">—</strong></div>
+        <div class="status-line"><span>Date</span><strong id="currentDate">—</strong></div>
+        <div class="status-line"><span>Entrées</span><strong id="entryCount">0</strong></div>
+      </div>
+
+      <div class="mini-card">
+        <label for="siteName">Nom du site</label>
+        <input id="siteName" type="text" placeholder="Ex : Centre Commercial Atlas" />
+        <div style="height:12px"></div>
+        <label for="siteConsigne">Consigne active</label>
+        <input id="siteConsigne" type="text" placeholder="Ex : Surveillance zone travaux N1" />
+        <div style="height:14px"></div>
+        <button class="btn btn-secondary" onclick="saveSettings()">Enregistrer les paramètres</button>
+      </div>
+
+      <div class="mini-card">
+        <label for="finServiceSignature">Signature fin de service</label>
+        <input id="finServiceSignature" type="text" placeholder="Nom / visa de l'agent en fin de service" />
+        <div style="height:12px"></div>
+        <label for="reliefAgent">Agent de relève</label>
+        <input id="reliefAgent" type="text" placeholder="Ex : Martin - SSIAP 2" />
+        <div style="height:12px"></div>
+        <label for="reliefConsignes">Consignes transmises à la relève</label>
+        <input id="reliefConsignes" type="text" placeholder="Ex : Maintenir surveillance zone travaux N1" />
+        <div style="height:14px"></div>
+        <button class="btn btn-secondary" onclick="saveHandoverSettings()">Enregistrer la relève</button>
+      </div>
+
+      <div class="mini-card no-print">
+        <button class="btn btn-secondary" onclick="exportPDF()">📄 Export PDF</button>
+        <div style="height:10px"></div>
+        <button class="btn btn-secondary" onclick="logout()">🔐 Déconnexion agent</button>
+        <div style="height:10px"></div>
+        <button class="btn btn-danger" onclick="clearEntries()">🗑️ Vider la main courante</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div>
+          <h2 id="headerTitle">Main courante informatisée</h2>
+          <p id="headerSubtitle">Chronologie des événements de sécurité incendie et d'exploitation.</p>
+        </div>
+        <div class="topbar-actions no-print">
+          <button class="btn btn-secondary" onclick="prefillPriseService()">+ Prise de service</button>
+          <button class="btn btn-secondary" onclick="prefillRonde()">+ Ronde</button>
+          <button class="btn btn-secondary" onclick="prefillSSI()">+ Déclenchement SSI</button>
+          <button class="btn btn-secondary" onclick="prefillPermisFeu()">+ Permis de feu</button>
+          <button class="btn btn-secondary" onclick="prefillKeyLog()">+ Gestion des clefs</button>
+        </div>
+      </div>
+
+      <div class="grid">
+        <section class="card no-print">
+          <div class="card-header">
+            <h3>Nouvelle entrée</h3>
+            <span class="tag">Horodatée</span>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div>
+                <label for="heure">Heure</label>
+                <input id="heure" type="time" />
+              </div>
+              <div>
+                <label for="type">Type</label>
+                <select id="type">
+                  <option value="Prise de service">Prise de service</option>
+                  <option value="Ronde">Ronde</option>
+                  <option value="Incident">Incident</option>
+                  <option value="SSI">SSI</option>
+                  <option value="Technique">Technique</option>
+                <option value="Consigne">Consigne</option>
+                <option value="Permis de feu">Permis de feu</option>
+                  <option value="Gestion des clefs">Gestion des clefs</option>
+                </select>
+              </div>
+              <div class="full">
+                <label for="lieu">Lieu</label>
+                <input id="lieu" type="text" placeholder="Ex : Parking -1 / PC Sécurité / Boutique 12" />
+              </div>
+              <div class="full">
+                <label for="details">Détails / actions / résultat</label>
+                <textarea id="details" placeholder="Ex : Levée de doute effectuée. Déclenchement intempestif lié à aérosol. Remise à l'état normal du SSI."></textarea>
+              </div>
+            </div>
+            <div style="height:14px"></div>
+            <button class="btn btn-primary" onclick="addEntry()">Ajouter à la main courante</button>
+            <div class="footer-note">Sauvegarde automatique activée sur cet appareil.</div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <h3>Journal chronologique</h3>
+            <span id="autosaveInfo" class="tag">Auto-save actif</span>
+          </div>
+          <div class="card-body">
+            <div class="toolbar no-print">
+              <input id="searchInput" type="text" placeholder="Rechercher un mot-clé..." oninput="renderEntries()" />
+              <select id="filterType" onchange="renderEntries()">
+                <option value="Tous">Tous les types</option>
+                <option value="Prise de service">Prise de service</option>
+                <option value="Ronde">Ronde</option>
+                <option value="Incident">Incident</option>
+                <option value="SSI">SSI</option>
+                <option value="Technique">Technique</option>
+                <option value="Consigne">Consigne</option>
+                <option value="Permis de feu">Permis de feu</option>
+                <option value="Gestion des clefs">Gestion des clefs</option>
+              </select>
+            </div>
+            <div class="timeline" id="log"></div>
+            <div id="handoverBoard"></div>
+            <div id="permitBoard"></div>
+            <div id="keyBoard"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEYS = {
+      entries: 'ssiap_main_courante_entries',
+      session: 'ssiap_main_courante_session',
+      settings: 'ssiap_main_courante_settings',
+      permits: 'ssiap_main_courante_permits',
+      keys: 'ssiap_main_courante_keys'
+    };
+
+    let entries = [];
+    let permits = [];
+    let keyLogs = [];
+    let session = null;
+    let settings = {
+      siteName: '',
+      siteConsigne: '',
+      finServiceSignature: '',
+      reliefAgent: '',
+      reliefConsignes: ''
+    };
+
+    function todayFr() {
+      return new Date().toLocaleDateString('fr-FR');
+    }
+
+    function nowTime() {
+      const d = new Date();
+      return d.toTimeString().slice(0,5);
+    }
+
+    function saveEntries() {
+      localStorage.setItem(STORAGE_KEYS.entries, JSON.stringify(entries));
+      updateCounter();
+    }
+
+    function saveSession() {
+      localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(session));
+      updateSessionUI();
+    }
+
+    function persistSettings() {
+      localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(settings));
+    }
+
+    function saveSettings() {
+      settings.siteName = document.getElementById('siteName').value.trim();
+      settings.siteConsigne = document.getElementById('siteConsigne').value.trim();
+      persistSettings();
+      updateHeader();
+      alert('Paramètres enregistrés.');
+    }
+
+    function saveHandoverSettings() {
+      settings.finServiceSignature = document.getElementById('finServiceSignature').value.trim();
+      settings.reliefAgent = document.getElementById('reliefAgent').value.trim();
+      settings.reliefConsignes = document.getElementById('reliefConsignes').value.trim();
+      persistSettings();
+      renderEntries();
+      alert('Informations de relève enregistrées.');
+    }
+
+    function loadData() {
+      try {
+        entries = JSON.parse(localStorage.getItem(STORAGE_KEYS.entries)) || [];
+        permits = JSON.parse(localStorage.getItem(STORAGE_KEYS.permits)) || [];
+        keyLogs = JSON.parse(localStorage.getItem(STORAGE_KEYS.keys)) || [];
+        session = JSON.parse(localStorage.getItem(STORAGE_KEYS.session)) || null;
+        settings = JSON.parse(localStorage.getItem(STORAGE_KEYS.settings)) || {
+          siteName: '',
+          siteConsigne: '',
+          finServiceSignature: '',
+          reliefAgent: '',
+          reliefConsignes: ''
+        };
+      } catch (e) {
+        entries = [];
+        permits = [];
+        keyLogs = [];
+        session = null;
+        settings = { siteName: '', siteConsigne: '' };
+      }
+
+      document.getElementById('siteName').value = settings.siteName || '';
+      document.getElementById('siteConsigne').value = settings.siteConsigne || '';
+      document.getElementById('finServiceSignature').value = settings.finServiceSignature || '';
+      document.getElementById('reliefAgent').value = settings.reliefAgent || '';
+      document.getElementById('reliefConsignes').value = settings.reliefConsignes || '';
+      document.getElementById('currentDate').textContent = todayFr();
+      document.getElementById('heure').value = nowTime();
+
+      updateSessionUI();
+      updateHeader();
+      renderEntries();
+    }
+
+    function updateHeader() {
+      const title = settings.siteName ? `Main courante – ${settings.siteName}` : 'Main courante informatisée';
+      const subtitle = settings.siteConsigne
+        ? `Consigne active : ${settings.siteConsigne}`
+        : 'Chronologie des événements de sécurité incendie et d\'exploitation.';
+      document.getElementById('headerTitle').textContent = title;
+      document.getElementById('headerSubtitle').textContent = subtitle;
+      document.title = settings.siteName ? `Main Courante SSIAP - ${settings.siteName}` : 'Main Courante SSIAP';
+    }
+
+    function updateCounter() {
+      document.getElementById('entryCount').textContent = entries.length;
+    }
+
+    function updateSessionUI() {
+      const overlay = document.getElementById('loginOverlay');
+      const pill = document.getElementById('sessionPill');
+      const agentName = document.getElementById('agentName');
+      const agentRole = document.getElementById('agentRole');
+
+      if (session && session.name && session.role) {
+        overlay.style.display = 'none';
+        pill.textContent = '● Connecté';
+        pill.classList.remove('off');
+        agentName.textContent = session.name;
+        agentRole.textContent = session.role;
+      } else {
+        overlay.style.display = 'flex';
+        pill.textContent = '● Déconnecté';
+        pill.classList.add('off');
+        agentName.textContent = '—';
+        agentRole.textContent = '—';
+      }
+    }
+
+    function login() {
+      const name = document.getElementById('loginNom').value.trim();
+      const role = document.getElementById('loginRole').value;
+
+      if (!name) {
+        alert('Veuillez renseigner le nom de l\'agent.');
+        return;
+      }
+
+      session = {
+        name,
+        role,
+        loginAt: new Date().toISOString()
+      };
+
+      saveSession();
+    }
+
+    function logout() {
+      if (!confirm('Confirmer la déconnexion de l\'agent ?')) return;
+      session = null;
+      localStorage.removeItem(STORAGE_KEYS.session);
+      updateSessionUI();
+    }
+
+    function classifyType(type) {
+      switch(type) {
+        case 'Incident': return 'incident';
+        case 'Ronde': return 'ronde';
+        case 'SSI': return 'ssi';
+        case 'Consigne': return 'consigne';
+        case 'Technique': return 'technique';
+        case 'Permis de feu': return 'permis-feu';
+        case 'Gestion des clefs': return 'clef';
+        default: return '';
+      }
+    }
+
+    function savePermits() {
+      localStorage.setItem(STORAGE_KEYS.permits, JSON.stringify(permits));
+    }
+
+    function saveKeys() {
+      localStorage.setItem(STORAGE_KEYS.keys, JSON.stringify(keyLogs));
+    }
+
+    function addEntry() {
+      if (!session) {
+        alert('Connexion agent requise.');
+        updateSessionUI();
+        return;
+      }
+
+      const heure = document.getElementById('heure').value || nowTime();
+      const type = document.getElementById('type').value;
+      const lieu = document.getElementById('lieu').value.trim() || 'Non précisé';
+      const details = document.getElementById('details').value.trim();
+
+      if (!type || !details) {
+        alert('Le type et les détails sont obligatoires.');
+        return;
+      }
+
+      const entry = {
+        id: Date.now(),
+        date: todayFr(),
+        heure,
+        type,
+        lieu,
+        details,
+        agent: session.name,
+        role: session.role,
+        createdAt: new Date().toISOString()
+      };
+
+      entries.unshift(entry);
+      saveEntries();
+      renderEntries();
+      clearForm();
+    }
+
+    function clearForm() {
+      document.getElementById('heure').value = nowTime();
+      document.getElementById('type').value = 'Prise de service';
+      document.getElementById('lieu').value = '';
+      document.getElementById('details').value = '';
+    }
+
+    function deleteEntry(id) {
+      if (!confirm('Supprimer cette entrée ?')) return;
+      entries = entries.filter(e => e.id !== id);
+      saveEntries();
+      renderEntries();
+    }
+
+    function clearEntries() {
+      if (!confirm('Cela supprimera toute la main courante enregistrée sur cet appareil. Continuer ?')) return;
+      entries = [];
+      permits = [];
+      keyLogs = [];
+      saveEntries();
+      savePermits();
+      saveKeys();
+      renderEntries();
+    }
+
+    function renderEntries() {
+      const log = document.getElementById('log');
+      const handoverBoard = document.getElementById('handoverBoard');
+      const permitBoard = document.getElementById('permitBoard');
+      const keyBoard = document.getElementById('keyBoard');
+      const search = document.getElementById('searchInput').value.trim().toLowerCase();
+      const filter = document.getElementById('filterType').value;
+
+      let filtered = [...entries];
+
+      if (filter !== 'Tous') {
+        filtered = filtered.filter(e => e.type === filter);
+      }
+
+      if (search) {
+        filtered = filtered.filter(e =>
+          e.type.toLowerCase().includes(search) ||
+          e.lieu.toLowerCase().includes(search) ||
+          e.details.toLowerCase().includes(search) ||
+          e.agent.toLowerCase().includes(search) ||
+          e.role.toLowerCase().includes(search)
+        );
+      }
+
+      updateCounter();
+
+      if (!filtered.length) {
+        log.innerHTML = '<div class="empty">Aucune entrée trouvée dans la main courante.</div>';
+      } else {
+        log.innerHTML = filtered.map(entry => `
+        <article class="entry">
+          <div class="entry-top">
+            <div>
+              <h4 class="entry-title">[${entry.heure}] ${entry.type}</h4>
+              <div class="entry-meta">
+                <span class="tag ${classifyType(entry.type)}">${entry.type}</span>
+                <span class="tag">📍 ${escapeHtml(entry.lieu)}</span>
+                <span class="tag">👤 ${escapeHtml(entry.agent)} – ${escapeHtml(entry.role)}</span>
+                <span class="tag">📅 ${entry.date}</span>
+              </div>
+            </div>
+            <div class="no-print">
+              <button class="btn btn-danger" onclick="deleteEntry(${entry.id})">Supprimer</button>
+            </div>
+          </div>
+          <p>${escapeHtml(entry.details)}</p>
+          <small>Saisie enregistrée automatiquement sur cet appareil.</small>
+        </article>
+      `).join('');
+      }
+
+      handoverBoard.innerHTML = `
+        <section class="card" style="margin-top:16px;">
+          <div class="card-header">
+            <h3>Relève d'équipe / Fin de service</h3>
+            <span class="tag">Transmission</span>
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <div>
+                <label>Signature fin de service</label>
+                <div class="entry"><strong>${escapeHtml(settings.finServiceSignature || 'Non renseignée')}</strong><p>Visa ou nom de l'agent quittant le service.</p></div>
+              </div>
+              <div>
+                <label>Agent de relève</label>
+                <div class="entry"><strong>${escapeHtml(settings.reliefAgent || 'Non renseigné')}</strong><p>Agent prenant le service à la relève.</p></div>
+              </div>
+            </div>
+            <div style="height:14px"></div>
+            <label>Consignes transmises</label>
+            <div class="entry">
+              <p>${escapeHtml(settings.reliefConsignes || 'Aucune consigne de relève enregistrée.')}</p>
+              <small>Date d'édition : ${todayFr()}</small>
+            </div>
+          </div>
+        </section>
+      `;
+
+      permitBoard.innerHTML = `
+        <section class="card permit-card">
+          <div class="card-header">
+            <h3>Formulaire permis de feu</h3>
+            <span class="tag permis-feu">Travaux par point chaud</span>
+          </div>
+          <div class="card-body no-print">
+            <div class="permit-grid">
+              <div>
+                <label for="pfNumero">N° permis</label>
+                <input id="pfNumero" type="text" placeholder="Ex : PF-2026-001" />
+              </div>
+              <div>
+                <label for="pfDate">Date</label>
+                <input id="pfDate" type="date" />
+              </div>
+              <div>
+                <label for="pfEntreprise">Entreprise intervenante</label>
+                <input id="pfEntreprise" type="text" placeholder="Ex : Société Travaux Services" />
+              </div>
+              <div>
+                <label for="pfResponsable">Responsable chantier</label>
+                <input id="pfResponsable" type="text" placeholder="Nom du responsable" />
+              </div>
+              <div class="full">
+                <label for="pfLieu">Lieu des travaux</label>
+                <input id="pfLieu" type="text" placeholder="Ex : Local technique N1" />
+              </div>
+              <div>
+                <label for="pfDebut">Heure début</label>
+                <input id="pfDebut" type="time" />
+              </div>
+              <div>
+                <label for="pfFin">Heure fin</label>
+                <input id="pfFin" type="time" />
+              </div>
+              <div class="full">
+                <label for="pfNature">Nature des travaux</label>
+                <textarea id="pfNature" placeholder="Ex : soudure sur tuyauterie / meulage / découpe"></textarea>
+              </div>
+            </div>
+
+            <div class="section-title">Mesures de prévention avant travaux</div>
+            <div class="checklist">
+              <label class="check-item"><input type="checkbox" id="pfCombustibles"> Combustibles éloignés ou protégés</label>
+              <label class="check-item"><input type="checkbox" id="pfExtincteurs"> Extincteurs disponibles à proximité</label>
+              <label class="check-item"><input type="checkbox" id="pfSprinkler"> Moyens incendie / sprinkler vérifiés</label>
+              <label class="check-item"><input type="checkbox" id="pfBalisage"> Zone balisée et accès contrôlé</label>
+              <label class="check-item"><input type="checkbox" id="pfVentilation"> Ventilation adaptée mise en place</label>
+              <label class="check-item"><input type="checkbox" id="pfSurveillance"> Surveillance pendant travaux prévue</label>
+              <label class="check-item"><input type="checkbox" id="pfApres"> Surveillance après travaux prévue</label>
+              <label class="check-item"><input type="checkbox" id="pfAutorisation"> Autorisation validée</label>
+            </div>
+
+            <div style="height:14px"></div>
+            <label for="pfObservations">Observations / consignes particulières</label>
+            <textarea id="pfObservations" placeholder="Consignes complémentaires, durée de surveillance après travaux, anomalies éventuelles..."></textarea>
+
+            <div style="height:14px"></div>
+            <div class="permit-grid">
+              <div>
+                <label for="pfSignataireEmetteur">Émetteur du permis</label>
+                <input id="pfSignataireEmetteur" type="text" placeholder="Nom / fonction" />
+              </div>
+              <div>
+                <label for="pfSignataireExecutant">Exécutant / entreprise</label>
+                <input id="pfSignataireExecutant" type="text" placeholder="Nom / fonction" />
+              </div>
+            </div>
+
+            <div style="height:14px"></div>
+            <button class="btn btn-primary" onclick="savePermit()">Enregistrer le permis de feu</button>
+          </div>
+          <div class="card-body">
+            <div id="permitList"></div>
+          </div>
+        </section>
+      `;
+
+      keyBoard.innerHTML = `
+        <section class="card key-card">
+          <div class="card-header">
+            <h3>Gestion des clefs</h3>
+            <span class="tag clef">Suivi des remises / retours</span>
+          </div>
+          <div class="card-body no-print">
+            <div class="key-grid">
+              <div>
+                <label for="keyNumero">N° / code clef</label>
+                <input id="keyNumero" type="text" placeholder="Ex : C-012 / Passe général" />
+              </div>
+              <div>
+                <label for="keyLieu">Lieu / serrure associée</label>
+                <input id="keyLieu" type="text" placeholder="Ex : Local technique N1" />
+              </div>
+              <div>
+                <label for="keyAction">Mouvement</label>
+                <select id="keyAction">
+                  <option value="Sortie">Sortie</option>
+                  <option value="Retour">Retour</option>
+                  <option value="Prêt temporaire">Prêt temporaire</option>
+                  <option value="Inventaire">Inventaire</option>
+                </select>
+              </div>
+              <div>
+                <label for="keyHeure">Heure</label>
+                <input id="keyHeure" type="time" />
+              </div>
+              <div>
+                <label for="keyPersonne">Remise à / reprise de</label>
+                <input id="keyPersonne" type="text" placeholder="Ex : M. Bernard / Société X" />
+              </div>
+              <div>
+                <label for="keyBadge">Badge / signature</label>
+                <input id="keyBadge" type="text" placeholder="Ex : Badge 1542 / Signature Bernard" />
+              </div>
+              <div>
+                <label for="keyMotif">Motif</label>
+                <input id="keyMotif" type="text" placeholder="Ex : Accès maintenance CTA" />
+              </div>
+              <div class="full">
+                <label for="keyObservations">Observations</label>
+                <textarea id="keyObservations" placeholder="État de la clef, badge associé, heure prévue de retour, anomalie constatée..."></textarea>
+              </div>
+            </div>
+            <div style="height:14px"></div>
+            <button class="btn btn-primary" onclick="saveKeyLog()">Enregistrer le mouvement de clef</button>
+          </div>
+          <div class="card-body">
+            <div class="key-status">
+              <div class="status-box status-out">Sorties : <span id="countOut">0</span></div>
+              <div class="status-box status-in">Revenues : <span id="countIn">0</span></div>
+              <div class="status-box status-late">En retard : <span id="countLate">0</span></div>
+            </div>
+            <div id="activeKeysList"></div>
+            <div id="keyList"></div>
+          </div>
+        </section>
+      `;
+
+      renderPermits();
+      renderKeys();
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function prefillPriseService() {
+      document.getElementById('heure').value = nowTime();
+      document.getElementById('type').value = 'Prise de service';
+      document.getElementById('lieu').value = 'PC Sécurité';
+      document.getElementById('details').value = 'Prise de service effectuée. Vérification du SSI, des moyens de secours et des consignes en cours. RAS.';
+    }
+
+    function prefillRonde() {
+      document.getElementById('heure').value = nowTime();
+      document.getElementById('type').value = 'Ronde';
+      document.getElementById('lieu').value = 'Zone à préciser';
+      document.getElementById('details').value = 'Ronde de sécurité effectuée. Contrôle visuel des accès, dégagements, issues de secours et équipements de sécurité. RAS.';
+    }
+
+    function prefillSSI() {
+      document.getElementById('heure').value = nowTime();
+      document.getElementById('type').value = 'SSI';
+      document.getElementById('lieu').value = 'Zone à préciser';
+      document.getElementById('details').value = 'Déclenchement SSI signalé. Levée de doute effectuée sur zone. Causes à préciser. Actions engagées et résultat consignés.';
+    }
+
+    function prefillPermisFeu() {
+      document.getElementById('heure').value = nowTime();
+      document.getElementById('type').value = 'Permis de feu';
+      document.getElementById('lieu').value = 'Zone travaux';
+      document.getElementById('details').value = 'Ouverture d\'un permis de feu pour travaux par point chaud. Vérification des moyens de secours, balisage de zone et surveillance avant / pendant / après travaux.';
+    }
+
+    function prefillKeyLog() {
+      document.getElementById('heure').value = nowTime();
+      document.getElementById('type').value = 'Gestion des clefs';
+      document.getElementById('lieu').value = 'PC Sécurité';
+      document.getElementById('details').value = 'Mouvement de clef enregistré au PC sécurité. Remise ou retour de clef consigné avec identité, motif et horaire.';
+    }
+
+    function savePermit() {
+      if (!session) {
+        alert('Connexion agent requise.');
+        updateSessionUI();
+        return;
+      }
+
+      const permit = {
+        id: Date.now(),
+        numero: document.getElementById('pfNumero').value.trim() || `PF-${new Date().getFullYear()}-${String(permits.length + 1).padStart(3, '0')}`,
+        date: document.getElementById('pfDate').value || new Date().toISOString().slice(0,10),
+        entreprise: document.getElementById('pfEntreprise').value.trim(),
+        responsable: document.getElementById('pfResponsable').value.trim(),
+        lieu: document.getElementById('pfLieu').value.trim(),
+        debut: document.getElementById('pfDebut').value,
+        fin: document.getElementById('pfFin').value,
+        nature: document.getElementById('pfNature').value.trim(),
+        observations: document.getElementById('pfObservations').value.trim(),
+        emetteur: document.getElementById('pfSignataireEmetteur').value.trim(),
+        executant: document.getElementById('pfSignataireExecutant').value.trim(),
+        checks: {
+          combustibles: document.getElementById('pfCombustibles').checked,
+          extincteurs: document.getElementById('pfExtincteurs').checked,
+          sprinkler: document.getElementById('pfSprinkler').checked,
+          balisage: document.getElementById('pfBalisage').checked,
+          ventilation: document.getElementById('pfVentilation').checked,
+          surveillance: document.getElementById('pfSurveillance').checked,
+          apres: document.getElementById('pfApres').checked,
+          autorisation: document.getElementById('pfAutorisation').checked
+        },
+        agent: session.name,
+        role: session.role,
+        createdAt: new Date().toISOString()
+      };
+
+      if (!permit.entreprise || !permit.lieu || !permit.nature) {
+        alert('Entreprise, lieu et nature des travaux sont obligatoires.');
+        return;
+      }
+
+      permits.unshift(permit);
+      savePermits();
+
+      entries.unshift({
+        id: Date.now() + 1,
+        date: todayFr(),
+        heure: permit.debut || nowTime(),
+        type: 'Permis de feu',
+        lieu: permit.lieu,
+        details: `Permis ${permit.numero} ouvert pour ${permit.entreprise}. Travaux : ${permit.nature}. Responsable : ${permit.responsable || 'Non précisé'}.`,
+        agent: session.name,
+        role: session.role,
+        createdAt: new Date().toISOString()
+      });
+      saveEntries();
+
+      clearPermitForm();
+      renderEntries();
+    }
+
+    function clearPermitForm() {
+      ['pfNumero','pfEntreprise','pfResponsable','pfLieu','pfNature','pfObservations','pfSignataireEmetteur','pfSignataireExecutant'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      ['pfCombustibles','pfExtincteurs','pfSprinkler','pfBalisage','pfVentilation','pfSurveillance','pfApres','pfAutorisation'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.checked = false;
+      });
+      const dateEl = document.getElementById('pfDate');
+      const debutEl = document.getElementById('pfDebut');
+      const finEl = document.getElementById('pfFin');
+      if (dateEl) dateEl.value = new Date().toISOString().slice(0,10);
+      if (debutEl) debutEl.value = nowTime();
+      if (finEl) finEl.value = '';
+    }
+
+    function renderPermits() {
+      const permitList = document.getElementById('permitList');
+      if (!permitList) return;
+
+      if (!permits.length) {
+        permitList.innerHTML = '<div class="empty">Aucun permis de feu enregistré.</div>';
+        clearPermitForm();
+        return;
+      }
+
+      permitList.innerHTML = permits.map(permit => {
+        const checks = [
+          permit.checks.combustibles ? 'Combustibles sécurisés' : null,
+          permit.checks.extincteurs ? 'Extincteurs présents' : null,
+          permit.checks.sprinkler ? 'Moyens incendie vérifiés' : null,
+          permit.checks.balisage ? 'Balisage en place' : null,
+          permit.checks.ventilation ? 'Ventilation adaptée' : null,
+          permit.checks.surveillance ? 'Surveillance pendant travaux' : null,
+          permit.checks.apres ? 'Surveillance après travaux' : null,
+          permit.checks.autorisation ? 'Autorisation validée' : null
+        ].filter(Boolean).join(' • ');
+
+        return `
+          <div class="permit-item">
+            <h4>${escapeHtml(permit.numero)} — ${escapeHtml(permit.entreprise)}</h4>
+            <p><strong>Date :</strong> ${escapeHtml(permit.date)} | <strong>Lieu :</strong> ${escapeHtml(permit.lieu)}</p>
+            <p><strong>Responsable :</strong> ${escapeHtml(permit.responsable || 'Non précisé')} | <strong>Horaires :</strong> ${escapeHtml(permit.debut || '--:--')} → ${escapeHtml(permit.fin || '--:--')}</p>
+            <p><strong>Travaux :</strong> ${escapeHtml(permit.nature)}</p>
+            <p><strong>Prévention :</strong> ${escapeHtml(checks || 'Aucune case cochée')}</p>
+            <p><strong>Observations :</strong> ${escapeHtml(permit.observations || 'Aucune')}</p>
+            <p><strong>Signataires :</strong> Émetteur ${escapeHtml(permit.emetteur || 'Non renseigné')} / Exécutant ${escapeHtml(permit.executant || 'Non renseigné')}</p>
+            <small>Enregistré par ${escapeHtml(permit.agent)} – ${escapeHtml(permit.role)}</small>
+          </div>
+        `;
+      }).join('');
+
+      const dateEl = document.getElementById('pfDate');
+      const debutEl = document.getElementById('pfDebut');
+      if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().slice(0,10);
+      if (debutEl && !debutEl.value) debutEl.value = nowTime();
+    }
+
+    function saveKeyLog() {
+      if (!session) {
+        alert('Connexion agent requise.');
+        updateSessionUI();
+        return;
+      }
+
+      const keyEntry = {
+        id: Date.now(),
+        numero: document.getElementById('keyNumero').value.trim(),
+        lieu: document.getElementById('keyLieu').value.trim(),
+        action: document.getElementById('keyAction').value,
+        heure: document.getElementById('keyHeure').value || nowTime(),
+        personne: document.getElementById('keyPersonne').value.trim(),
+        motif: document.getElementById('keyMotif').value.trim(),
+        observations: document.getElementById('keyObservations').value.trim(),
+        badge: document.getElementById('keyBadge').value.trim(),
+        date: todayFr(),
+        agent: session.name,
+        role: session.role,
+        createdAt: new Date().toISOString()
+      };
+
+      if (!keyEntry.numero || !keyEntry.lieu || !keyEntry.personne) {
+        alert('Le numéro de clef, le lieu et la personne sont obligatoires.');
+        return;
+      }
+
+      keyLogs.unshift(keyEntry);
+      saveKeys();
+
+      entries.unshift({
+        id: Date.now() + 2,
+        date: todayFr(),
+        heure: keyEntry.heure,
+        type: 'Gestion des clefs',
+        lieu: keyEntry.lieu,
+        details: `${keyEntry.action} de la clef ${keyEntry.numero} pour ${keyEntry.personne}. Motif : ${keyEntry.motif || 'Non précisé'}. Badge / signature : ${keyEntry.badge || 'Non renseigné'}.`,
+        agent: session.name,
+        role: session.role,
+        createdAt: new Date().toISOString()
+      });
+      saveEntries();
+
+      clearKeyForm();
+      renderEntries();
+    }
+
+    function clearKeyForm() {
+      ['keyNumero','keyLieu','keyPersonne','keyBadge','keyMotif','keyObservations'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      const actionEl = document.getElementById('keyAction');
+      const heureEl = document.getElementById('keyHeure');
+      if (actionEl) actionEl.value = 'Sortie';
+      if (heureEl) heureEl.value = nowTime();
+    }
+
+    function renderKeys() {
+      const now = new Date();
+      const activeKeysList = document.getElementById('activeKeysList');
+      const keyList = document.getElementById('keyList');
+      if (!keyList) return;
+
+      // calcul réel des clefs en cours
+      const activeKeys = {};
+
+      [...keyLogs].reverse().forEach(k => {
+        if (k.action === 'Sortie' || k.action === 'Prêt temporaire') {
+          activeKeys[k.numero] = k;
+        }
+        if (k.action === 'Retour') {
+          delete activeKeys[k.numero];
+        }
+      });
+
+      const activeList = Object.values(activeKeys);
+
+      let out = activeList.length;
+      let back = keyLogs.filter(k => k.action === 'Retour').length;
+      let late = 0;
+
+      activeList.forEach(k => {
+        const d = new Date(k.createdAt);
+        if ((now - d) / 3600000 > 8) late++;
+      });
+
+      if (!activeList.length) {
+        activeKeysList.innerHTML = '<div class="empty">Aucune clef actuellement sortie.</div>';
+      } else {
+        activeKeysList.innerHTML = `
+          <div class="section-title">Clefs non rendues</div>
+          <div class="active-keys-list">
+            ${activeList.map(k => {
+              const d = new Date(k.createdAt);
+              const diffMs = now - d;
+              const hours = Math.floor(diffMs / 3600000);
+              const minutes = Math.floor((diffMs % 3600000) / 60000);
+              const duration = `${String(hours).padStart(2,'0')}h${String(minutes).padStart(2,'0')}`;
+              const isLate = (now - d) / 3600000 > 8;
+              return `
+                <div class="active-key-row ${isLate ? 'late-alert' : ''}">
+                  <strong>🔑 ${escapeHtml(k.numero)} — ${escapeHtml(k.personne)}</strong>
+                  <div>📍 ${escapeHtml(k.lieu)} | ⏰ Sortie : ${escapeHtml(k.heure)}</div>
+                  <div>🕒 Durée : ${duration}</div>
+                  <div>${isLate ? '🚨 Clef en retard' : '✅ Suivi en cours'}</div>
+                  <div class="badge-signature">🔐 ${escapeHtml(k.badge || 'Badge / signature non renseigné')}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }
+
+      document.getElementById('countOut').textContent = out;
+      document.getElementById('countIn').textContent = back;
+      document.getElementById('countLate').textContent = late;
+
+      if (!keyLogs.length) {
+        keyList.innerHTML = '<div class="empty">Aucun mouvement de clef enregistré.</div>';
+        clearKeyForm();
+        return;
+      }
+
+      keyList.innerHTML = keyLogs.map(item => `
+        <div class="key-item">
+          <h4>${escapeHtml(item.numero)} — ${escapeHtml(item.action)}</h4>
+          <p><strong>Date :</strong> ${escapeHtml(item.date)} | <strong>Heure :</strong> ${escapeHtml(item.heure)}</p>
+          <p><strong>Lieu :</strong> ${escapeHtml(item.lieu)}</p>
+          <p><strong>Personne :</strong> ${escapeHtml(item.personne)}</p>
+          <p><strong>Badge / signature :</strong> ${escapeHtml(item.badge || 'Non renseigné')}</p>
+          <p><strong>Motif :</strong> ${escapeHtml(item.motif || 'Non précisé')}</p>
+          <p><strong>Observations :</strong> ${escapeHtml(item.observations || 'Aucune')}</p>
+          <small>Enregistré par ${escapeHtml(item.agent)} – ${escapeHtml(item.role)}</small>
+        </div>
+      `).join('');
+
+      const heureEl = document.getElementById('keyHeure');
+      if (heureEl && !heureEl.value) heureEl.value = nowTime();
+    }
+
+    function exportPDF() {
+      window.print();
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
