@@ -1090,9 +1090,6 @@
         </section>
       `;
 
-      renderPermits();
-      renderKeys();
-
       keyBoard.innerHTML = `
         <section class="card key-card">
           <div class="card-header">
@@ -1153,6 +1150,9 @@
           </div>
         </section>
       `;
+
+      renderPermits();
+      renderKeys();
     }
 
     function escapeHtml(text) {
@@ -1386,7 +1386,7 @@
       // calcul réel des clefs en cours
       const activeKeys = {};
 
-      keyLogs.forEach(k => {
+      [...keyLogs].reverse().forEach(k => {
         if (k.action === 'Sortie' || k.action === 'Prêt temporaire') {
           activeKeys[k.numero] = k;
         }
